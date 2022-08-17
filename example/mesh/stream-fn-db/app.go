@@ -47,6 +47,11 @@ func main() {
 	// set handler
 	sfn.SetHandler(Handler)
 
+	// set error handler
+	sfn.SetErrorHandler(func(err error) {
+		log.Printf("[MockDB] error handler: %v", err)
+	})
+
 	// start
 	err := sfn.Connect()
 	if err != nil {

@@ -17,7 +17,7 @@ type Context struct {
 	Host string
 	// Port is the port listen on or connect to
 	Port int
-	// Client credential 
+	// Client credential
 	Credential string
 }
 

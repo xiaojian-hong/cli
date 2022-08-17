@@ -15,10 +15,15 @@ func main() {
 	// set handler
 	sfn.SetHandler(rt.RawByteHandler)
 
+	// set error handler
+	sfn.SetErrorHandler(func(err error) {
+		log.Printf("[flow] error handler: %v", err)
+	})
+
 	// start
 	err := sfn.Connect()
 	if err != nil {
-		log.Print("[flow] connect err=%v", err)
+		log.Printf("[flow] connect err=%v", err)
 	}
 
 	// pipe rx stream and rx handler.

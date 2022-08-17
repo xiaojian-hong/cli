@@ -35,8 +35,7 @@ func main() {
 	source.SetDataTag(0x33)
 	// set the error handler function when server error occurs
 	source.SetErrorHandler(func(err error) {
-		log.Printf("[source] receive server error: %v", err)
-		os.Exit(1)
+		log.Printf("[source] error handler: %v", err)
 	})
 	// generate mock data and send it to YoMo-Zipper in every 100 ms.
 	generateAndSendData(source)

@@ -35,6 +35,11 @@ func main() {
 	// set handler
 	sfn.SetHandler(wrappedHandler(vm, prg))
 
+	// set error handler
+	sfn.SetErrorHandler(func(err error) {
+		log.Printf("[flow] error handler: %v", err)
+	})
+
 	// start
 	err = sfn.Connect()
 	if err != nil {

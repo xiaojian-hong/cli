@@ -61,6 +61,11 @@ func main() {
 	// set handler
 	sfn.SetHandler(rt.RawByteHandler)
 
+	// set error handler
+	sfn.SetErrorHandler(func(err error) {
+		log.Printf("[Noise] error handler: %v", err)
+	})
+
 	// start
 	err := sfn.Connect()
 	if err != nil {
