@@ -69,8 +69,8 @@ jobs:
           echo "Uploading YoMo Binaries to GitHub Release"
           github-release upload \
             --owner $OWNER_NAME --repo $REPO_NAME \
-            --tag "cli-${{ steps.tag.outputs.version }}" \
-            --name "CLI ${{ steps.tag.outputs.version }}" \
+            --tag "${{ steps.tag.outputs.version }}" \
+            --name "${{ steps.tag.outputs.version }}" \
             --prerelease true \
             ${RELEASE_ARTIFACT[*]}
       - name: Dispatch release notification
