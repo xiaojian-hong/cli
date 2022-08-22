@@ -45,8 +45,7 @@ var devCmd = &cobra.Command{
 		log.PendingStatusEvent(os.Stdout, "Create YoMo Stream Function instance...")
 
 		// Connect the serverless to YoMo dev-server, it will automatically emit the mock data.
-		opts.Host = "dev.yomo.run"
-		opts.Port = 9140
+		opts.ZipperAddrs = []string{"dev.yomo.run:9140"}
 		opts.Name = "yomo-app-demo"
 
 		s, err := serverless.Create(&opts)

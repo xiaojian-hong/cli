@@ -59,10 +59,9 @@ var buildCmd = &cobra.Command{
 			return
 		}
 		log.InfoStatusEvent(os.Stdout,
-			"Starting YoMo Stream Function instance with Name: %s. Host: %s. Port: %d.",
+			"Starting YoMo Stream Function instance with Name: %s. Zipper: %v.",
 			opts.Name,
-			opts.Host,
-			opts.Port,
+			opts.ZipperAddrs,
 		)
 		// build
 		log.PendingStatusEvent(os.Stdout, "YoMo Stream Function function building...")

@@ -19,10 +19,8 @@ var InitFuncTmpl []byte
 type Context struct {
 	// Name of the servcie
 	Name string
-	// Host is the hostname listen on or connect to
-	Host string
-	// Port is the port listen on or connect to
-	Port int
+	// ZipperAddrs is the addresses of the zipper server
+	ZipperAddrs []string
 	// Client credential
 	Credential string
 }

@@ -48,8 +48,8 @@ func generateAndSendData(stream yomo.Source) {
 		// Encode data via Y3 codec https://github.com/yomorun/y3-codec.
 		sendingBuf, _ := json.Marshal(data)
 
-		// send data via QUIC stream.
-		_, err := stream.Write(sendingBuf)
+		// broadcast this message to cascading zippers using `Broadcast` method
+		err := stream.Broadcast(sendingBuf)
 		if err != nil {
 			log.Printf("❌ Emit %v to YoMo-Zipper failure with err: %v", data, err)
 		} else {

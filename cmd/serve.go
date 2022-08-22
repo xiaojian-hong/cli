@@ -26,6 +26,7 @@ import (
 )
 
 var meshConfURL string
+var v *viper.Viper
 
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
@@ -46,7 +47,7 @@ var serveCmd = &cobra.Command{
 			log.FailureStatusEvent(os.Stdout, err.Error())
 		}
 		// auth
-		auth := viper.GetString("auth")
+		auth := v.GetString("auth")
 		if len(auth) > 0 {
 			idx := strings.Index(auth, ":")
 			if idx != -1 {
@@ -80,5 +81,9 @@ func init() {
 	serveCmd.Flags().StringVarP(&meshConfURL, "mesh-config", "m", "", "The URL of mesh config")
 	// auth string
 	serveCmd.Flags().StringP("auth", "a", "", "authentication name and arguments, eg: `token:yomo`")
-	viper.BindPFlag("auth", serveCmd.Flags().Lookup("auth"))
+	v = viper.New()
+	v.AutomaticEnv()
+	v.SetEnvPrefix("YOMO")
+	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	v.BindPFlag("auth", serveCmd.Flags().Lookup("auth"))
 }

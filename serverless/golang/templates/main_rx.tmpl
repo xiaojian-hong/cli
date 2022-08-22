@@ -1,13 +1,25 @@
 
 // Serverless main function
 func main() {
+	{{range $idx, $addr := .ZipperAddrs}}
+	sfn{{$idx}}Close, err := runSFN("{{$addr}}")
+	defer sfn{{$idx}}Close()
+	if err != nil {
+		log.Printf("[flow] connect to zipper[{{$addr}}], err=%v\n", err)
+		os.Exit(1)
+	}
+	{{end}}
+	select {}
+}
+
+func runSFN(addr string) (closeFn func() error, err error){
 	sfn := yomo.NewStreamFunction(
-		"{{.Name}}",
-		yomo.WithZipperAddr("{{.Host}}:{{.Port}}"),
+		"{{$.Name}}",
+		yomo.WithZipperAddr(addr),
 		yomo.WithObserveDataTags(DataTags()...),
-        {{if .Credential -}}yomo.WithCredential("{{.Credential}}"),{{- end}}
+        {{if $.Credential -}}yomo.WithCredential("{{$.Credential}}"),{{- end}}
 	)
-	defer sfn.Close()
+	closeFn = sfn.Close
 
 	// create a Rx runtime.
 	rt := rx.NewRuntime(sfn)
@@ -17,17 +29,17 @@ func main() {
 
 	// set error handler
 	sfn.SetErrorHandler(func(err error) {
-		log.Printf("[flow] error handler: %v", err)
+		log.Printf("[flow][%s] error handler: %T %v\n", addr, err, err)
 	})
 
 	// start
-	err := sfn.Connect()
+	err = sfn.Connect()
 	if err != nil {
-		log.Printf("[flow] connect err=%v", err)
+		return 
 	}
 
 	// pipe rx stream and rx handler.
 	rt.Pipe(Handler)
 
-	select {}
+	return 
 }

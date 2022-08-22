@@ -67,7 +67,7 @@ tasks:
 
   example:
     desc: example
-    deps: [example-zipper,example-source,example-stream-fn,example-stream-fn-db]
+    deps: [example-zipper,example-zipper2,example-source,example-stream-fn,example-stream-fn-db]
     cmds:
       - echo "example"
 
@@ -83,6 +83,16 @@ tasks:
     deps: [build]
     cmds:
       - "{{.ExeDir}}/{{.ExeName}} serve -c example/zipper/workflow.yaml"
+    silent: false
+    env:
+      YOMO_LOG_LEVEL: error
+      YOMO_AUTH: token:1234
+
+  example-zipper2:
+    desc: "run zipper2"
+    deps: [build]
+    cmds:
+      - "{{.ExeDir}}/{{.ExeName}} serve -c example/zipper/workflow2.yaml"
     silent: false
     env:
       YOMO_LOG_LEVEL: error
@@ -110,20 +120,18 @@ tasks:
   example-stream-fn:
     desc: "run stream-fn application"
     deps: [build]
+    dir: "example/stream-fn"
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/go.mod example/stream-fn/app.go"
+      - "../../{{.ExeDir}}/{{.ExeName}} run app.go"
     silent: false
-    env:
-      YOMO_CREDENTIAL: token:1234
 
   example-stream-fn-db:
     desc: run output stream-fn-db
     deps: [build]
+    dir: "example/stream-fn-db"
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} run -n MockDB -m example/go.mod example/stream-fn-db/app.go"
+      - "../../{{.ExeDir}}/{{.ExeName}} run app.go"
     silent: false
-    env:
-      YOMO_CREDENTIAL: token:1234
 
   example-js-stream-fn:
     desc: "run js-stream-fn application"

@@ -44,10 +44,9 @@ func (s *JsServerless) Init(opts *serverless.Options) error {
 
 	// append main function
 	ctx := Context{
-		Name:       s.opts.Name,
-		Host:       s.opts.Host,
-		Port:       s.opts.Port,
-		Credential: s.opts.Credential,
+		Name:        s.opts.Name,
+		ZipperAddrs: s.opts.ZipperAddrs,
+		Credential:  s.opts.Credential,
 	}
 
 	mainFuncTmpl := string(MainFuncRawBytesTmpl)

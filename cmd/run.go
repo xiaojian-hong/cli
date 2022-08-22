@@ -50,9 +50,6 @@ var runCmd = &cobra.Command{
 		if len(args) > 0 {
 			opts.Filename = args[0]
 		}
-		// os signal
-		// sigCh := make(chan os.Signal, 1)
-		// signal.Notify(sigCh, syscall.SIGTERM, syscall.SIGINT)
 		// Serverless
 		log.InfoStatusEvent(os.Stdout, "YoMo Stream Function file: %v", opts.Filename)
 		if !file.IsExec(opts.Filename) && opts.Name == "" {
@@ -72,10 +69,9 @@ var runCmd = &cobra.Command{
 		}
 		if !s.Executable() {
 			log.InfoStatusEvent(os.Stdout,
-				"Starting YoMo Stream Function instance with Name: %s. Host: %s. Port: %d.",
+				"Starting YoMo Stream Function instance with Name: %s. Zipper: %v.",
 				opts.Name,
-				opts.Host,
-				opts.Port,
+				opts.ZipperAddrs,
 			)
 			// build
 			log.PendingStatusEvent(os.Stdout, "YoMo Stream Function building...")
@@ -86,10 +82,9 @@ var runCmd = &cobra.Command{
 			log.SuccessStatusEvent(os.Stdout, "Success! YoMo Stream Function build.")
 		} else { // executable
 			log.InfoStatusEvent(os.Stdout,
-				"Starting YoMo Stream Function instance with executable file: %s. Host: %s. Port: %d.",
+				"Starting YoMo Stream Function instance with executable file: %s. Zipper: %v.",
 				opts.Filename,
-				opts.Host,
-				opts.Port,
+				opts.ZipperAddrs,
 			)
 		}
 		// run
@@ -98,10 +93,6 @@ var runCmd = &cobra.Command{
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
 		}
-		// Exit
-		// <-sigCh
-		// log.WarningStatusEvent(os.Stdout, "Terminated signal received: shutting down")
-		// log.InfoStatusEvent(os.Stdout, "Exited YoMo Stream Function instance.")
 	},
 }
 
