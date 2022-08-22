@@ -136,20 +136,18 @@ tasks:
   example-js-stream-fn:
     desc: "run js-stream-fn application"
     deps: [build]
+    dir: "example/js/stream-fn"
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} run -n Noise -m example/go.mod example/js/stream-fn/app.js"
+      - "../../../{{.ExeDir}}/{{.ExeName}} run app.js"
     silent: false
-    env:
-      YOMO_CREDENTIAL: token:1234
 
   example-js-stream-fn-db:
     desc: run output stream-fn-db
     deps: [build]
+    dir: "example/js/stream-fn-db"
     cmds:
-      - "{{.ExeDir}}/{{.ExeName}} run -n MockDB -m example/go.mod example/js/stream-fn-db/app.js"
+      - "../../../{{.ExeDir}}/{{.ExeName}} run app.js"
     silent: false
-    env:
-      YOMO_CREDENTIAL: token:1234
 
   version:
     desc: "print version"

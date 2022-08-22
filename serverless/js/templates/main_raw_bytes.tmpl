@@ -24,29 +24,42 @@ func main() {
 		return
 	}
 
+	// run sfn
+	{{range $idx, $addr := .ZipperAddrs}}
+	sfn{{$idx}}Close, err := runSFN("{{$addr}}", vm, prg)
+	defer sfn{{$idx}}Close()
+	if err != nil {
+		log.Printf("[{{$.Name}}] connect to zipper[{{$addr}}], err=%v\n", err)
+		os.Exit(1)
+	}
+	{{end}}
+	select {}
+}
+
+func runSFN(addr string, vm *goja.Runtime, prg *goja.Program) (closeFn func() error, err error){
 	sfn := yomo.NewStreamFunction(
-		"{{.Name}}",
-		yomo.WithZipperAddr("{{.Host}}:{{.Port}}"),
+		"{{$.Name}}",
+		yomo.WithZipperAddr(addr),
 		yomo.WithObserveDataTags(getObserveDataTags(vm, prg)...),
-        {{if .Credential -}}yomo.WithCredential("{{.Credential}}"),{{- end}}
+        {{if $.Credential -}}yomo.WithCredential("{{$.Credential}}"),{{- end}}
 	)
-	defer sfn.Close()
+	closeFn = sfn.Close
 
 	// set handler
 	sfn.SetHandler(wrappedHandler(vm, prg))
 
 	// set error handler
 	sfn.SetErrorHandler(func(err error) {
-		log.Printf("[flow] error handler: %v", err)
+		log.Printf("[flow][%s] error handler: %T %v\n", addr, err, err)
 	})
 
 	// start
 	err = sfn.Connect()
 	if err != nil {
-		log.Printf("[{{.Name}}] connect err=%v\n", err)
+		return 
 	}
 
-	select {}
+	return 
 }
 
 func wrappedHandler(vm *goja.Runtime, prg *goja.Program) func(data []byte) (byte, []byte) {
