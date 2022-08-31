@@ -26,6 +26,7 @@ import (
 	_ "github.com/yomorun/cli/serverless/exec"
 	_ "github.com/yomorun/cli/serverless/golang"
 	_ "github.com/yomorun/cli/serverless/js"
+	_ "github.com/yomorun/cli/serverless/wasm"
 )
 
 var runViper *viper.Viper
@@ -41,6 +42,7 @@ var runCmd = &cobra.Command{
 		loadViperValue(cmd, runViper, &opts.Name, "name")
 		loadViperValue(cmd, runViper, &opts.ModFile, "modfile")
 		loadViperValue(cmd, runViper, &opts.Credential, "credential")
+		loadViperValue(cmd, runViper, &opts.Runtime, "runtime")
 
 		if opts.Name == "" {
 			log.FailureStatusEvent(os.Stdout, "YoMo Stream Function name must be set.")
@@ -104,6 +106,7 @@ func init() {
 	runCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo stream function name. It should match the specific service name in YoMo-Zipper config (workflow.yaml)")
 	runCmd.Flags().StringVarP(&opts.ModFile, "modfile", "m", "", "custom go.mod")
 	runCmd.Flags().StringVarP(&opts.Credential, "credential", "d", "", "client credential payload, eg: `token:dBbBiRE7`")
+	runCmd.Flags().StringVarP(&opts.Runtime, "runtime", "r", "", "serverless runtime type")
 
 	runViper = bindViper(runCmd)
 }

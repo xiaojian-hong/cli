@@ -1,9 +1,10 @@
 module github.com/yomorun/cli
 
-go 1.17
+go 1.19
 
 require (
 	github.com/briandowns/spinner v1.19.0
+	github.com/bytecodealliance/wasmtime-go v0.39.0
 	github.com/dop251/goja v0.0.0-20220110113543-261677941f3c
 	github.com/fatih/color v1.13.0
 	github.com/joho/godotenv v1.4.0
@@ -36,6 +37,7 @@ require (
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.3 // indirect
+	github.com/second-state/WasmEdge-go v0.10.1
 	github.com/spf13/afero v1.9.2 // indirect
 	github.com/spf13/cast v1.5.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

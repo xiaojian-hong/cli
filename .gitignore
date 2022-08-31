@@ -28,6 +28,9 @@ example/mesh/sink/sink
 example/mesh/stream-fn/stream-fn*
 example/mesh/stream-fn-db/sl.yomo
 example/mesh/stream-fn-db/stream-fn-db
+*.wasm
+Cargo.lock
+target
 VERSION
 
 # release directory
