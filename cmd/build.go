@@ -33,38 +33,35 @@ var buildCmd = &cobra.Command{
 	Long:  "Build the YoMo Stream Function as binary file",
 	Run: func(cmd *cobra.Command, args []string) {
 		loadViperValue(cmd, buildViper, &opts.Filename, "file-name")
-		loadViperValue(cmd, buildViper, &url, "url")
-		loadViperValue(cmd, buildViper, &opts.Name, "name")
+		// loadViperValue(cmd, buildViper, &url, "url")
+		// loadViperValue(cmd, buildViper, &opts.Name, "name")
 		loadViperValue(cmd, buildViper, &opts.ModFile, "modfile")
-		loadViperValue(cmd, buildViper, &opts.Credential, "credential")
+		// loadViperValue(cmd, buildViper, &opts.Credential, "credential")
+		// use environment variable to override flags
+		opts.UseEnv = true
 
-		if opts.Name == "" {
-			log.FailureStatusEvent(os.Stdout, "YoMo Stream Function name must be set.")
-			return
-		}
+		// if opts.Name == "" {
+		// 	log.FailureStatusEvent(os.Stdout, "YoMo Stream Function name must be set.")
+		// 	return
+		// }
 
 		if len(args) > 0 {
 			opts.Filename = args[0]
 		}
 		log.InfoStatusEvent(os.Stdout, "YoMo Stream Function file: %v", opts.Filename)
 		// resolve serverless
-		log.PendingStatusEvent(os.Stdout, "Create YoMo Stream Function instance...")
-		if err := parseURL(url, &opts); err != nil {
-			log.FailureStatusEvent(os.Stdout, err.Error())
-			return
-		}
+		// log.PendingStatusEvent(os.Stdout, "Create YoMo Stream Function instance...")
+		// if err := parseURL(url, &opts); err != nil {
+		// 	log.FailureStatusEvent(os.Stdout, err.Error())
+		// 	return
+		// }
 		s, err := serverless.Create(&opts)
 		if err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
 		}
-		log.InfoStatusEvent(os.Stdout,
-			"Starting YoMo Stream Function instance with Name: %s. Zipper: %v.",
-			opts.Name,
-			opts.ZipperAddrs,
-		)
 		// build
-		log.PendingStatusEvent(os.Stdout, "YoMo Stream Function function building...")
+		log.PendingStatusEvent(os.Stdout, "YoMo Stream Function building...")
 		if err := s.Build(true); err != nil {
 			log.FailureStatusEvent(os.Stdout, err.Error())
 			return
@@ -77,10 +74,10 @@ func init() {
 	rootCmd.AddCommand(buildCmd)
 
 	buildCmd.Flags().StringVarP(&opts.Filename, "file-name", "f", "app.go", "Stream function file (default is app.go)")
-	buildCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "YoMo-Zipper endpoint addr")
-	buildCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo stream function app name (required). It should match the specific service name in YoMo-Zipper config (workflow.yaml)")
+	// buildCmd.Flags().StringVarP(&url, "url", "u", "localhost:9000", "YoMo-Zipper endpoint addr")
+	// buildCmd.Flags().StringVarP(&opts.Name, "name", "n", "", "yomo stream function app name (required). It should match the specific service name in YoMo-Zipper config (workflow.yaml)")
 	buildCmd.Flags().StringVarP(&opts.ModFile, "modfile", "m", "", "custom go.mod")
-	buildCmd.Flags().StringVarP(&opts.Credential, "credential", "d", "", "client credential payload, eg: `token:dBbBiRE7`")
+	// buildCmd.Flags().StringVarP(&opts.Credential, "credential", "d", "", "client credential payload, eg: `token:dBbBiRE7`")
 
 	buildViper = bindViper(buildCmd)
 }

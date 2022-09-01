@@ -1,23 +1,34 @@
 
 // Serverless main function
 func main() {
-	{{range $idx, $addr := .ZipperAddrs}}
-	sfn{{$idx}}Close, err := runSFN("{{$addr}}")
-	defer sfn{{$idx}}Close()
+	addrs, err := parseZipperAddrs()
 	if err != nil {
-		log.Printf("[flow] connect to zipper[{{$addr}}], err=%v\n", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
+	{{if .UseEnv}} 
+	name := env("Name")
+	credential := env("Credential")
+	{{else}}
+	name := "{{.Name}}"
+	credential := "{{.Credential}}"
 	{{end}}
+	for _, addr := range addrs {
+		sfnClose, err := runSFN(name, addr, credential)
+		defer sfnClose()
+		if err != nil {
+			log.Printf("[sfn] connect to zipper[%s], %v\n", addr, err)
+			os.Exit(1)
+		}
+	}
 	select {}
 }
 
-func runSFN(addr string) (closeFn func() error, err error){
+func runSFN(name string, addr string, credential string) (closeFn func() error, err error) {
 	sfn := yomo.NewStreamFunction(
-		"{{$.Name}}",
+		name,
 		yomo.WithZipperAddr(addr),
 		yomo.WithObserveDataTags(DataTags()...),
-        {{if $.Credential -}}yomo.WithCredential("{{$.Credential}}"),{{- end}}
+		yomo.WithCredential(credential),
 	)
 	closeFn = sfn.Close
 
@@ -29,17 +40,17 @@ func runSFN(addr string) (closeFn func() error, err error){
 
 	// set error handler
 	sfn.SetErrorHandler(func(err error) {
-		log.Printf("[flow][%s] error handler: %T %v\n", addr, err, err)
+		log.Printf("[sfn][%s] error handler: %T %v\n", addr, err, err)
 	})
 
 	// start
 	err = sfn.Connect()
 	if err != nil {
-		return 
+		return
 	}
 
 	// pipe rx stream and rx handler.
 	rt.Pipe(Handler)
 
-	return 
+	return
 }

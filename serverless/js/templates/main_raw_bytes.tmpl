@@ -17,7 +17,6 @@ func main() {
 	vm.Set("stringToArrayBuffer", func(v string) goja.ArrayBuffer {
 		return vm.NewArrayBuffer([]byte(v))
 	})
-	// prg, err := complieJS(vm, string(source))
 	prg, err := complieJS(vm, source)
 	if err != nil {
 		log.Printf("complie js err: %v\n", err)
@@ -25,23 +24,34 @@ func main() {
 	}
 
 	// run sfn
-	{{range $idx, $addr := .ZipperAddrs}}
-	sfn{{$idx}}Close, err := runSFN("{{$addr}}", vm, prg)
-	defer sfn{{$idx}}Close()
+	addrs, err := parseZipperAddrs()
 	if err != nil {
-		log.Printf("[{{$.Name}}] connect to zipper[{{$addr}}], err=%v\n", err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
+	{{if .UseEnv}} 
+	name := env("Name")
+	credential := env("Credential")
+	{{else}}
+	name := "{{.Name}}"
+	credential := "{{.Credential}}"
 	{{end}}
+	for _, addr := range addrs {
+		sfnClose, err := runSFN(vm, prg, name, addr, credential)
+		defer sfnClose()
+		if err != nil {
+			log.Printf("[sfn] connect to zipper[%s], %v\n", addr, err)
+			os.Exit(1)
+		}
+	}
 	select {}
 }
 
-func runSFN(addr string, vm *goja.Runtime, prg *goja.Program) (closeFn func() error, err error){
+func runSFN(vm *goja.Runtime, prg *goja.Program, name string, addr string, credential string) (closeFn func() error, err error){
 	sfn := yomo.NewStreamFunction(
-		"{{$.Name}}",
+		name,
 		yomo.WithZipperAddr(addr),
 		yomo.WithObserveDataTags(getObserveDataTags(vm, prg)...),
-        {{if $.Credential -}}yomo.WithCredential("{{$.Credential}}"),{{- end}}
+        yomo.WithCredential(credential),
 	)
 	closeFn = sfn.Close
 
@@ -50,7 +60,7 @@ func runSFN(addr string, vm *goja.Runtime, prg *goja.Program) (closeFn func() er
 
 	// set error handler
 	sfn.SetErrorHandler(func(err error) {
-		log.Printf("[flow][%s] error handler: %T %v\n", addr, err, err)
+		log.Printf("[sfn][%s] error handler: %T %v\n", addr, err, err)
 	})
 
 	// start

@@ -47,8 +47,10 @@ func (s *JsServerless) Init(opts *serverless.Options) error {
 		Name:        s.opts.Name,
 		ZipperAddrs: s.opts.ZipperAddrs,
 		Credential:  s.opts.Credential,
+		UseEnv:      s.opts.UseEnv,
 	}
 
+	MainFuncRawBytesTmpl = append(MainFuncRawBytesTmpl, PartialsTmpl...)
 	mainFuncTmpl := string(MainFuncRawBytesTmpl)
 	mainFunc, err := RenderTmpl(mainFuncTmpl, &ctx)
 	if err != nil {
@@ -91,8 +93,12 @@ func (s *JsServerless) Init(opts *serverless.Options) error {
 		return fmt.Errorf("Init: write file err %s", err)
 	}
 	// log.InfoStatusEvent(os.Stdout, "final write file elapse: %v", time.Since(now))
+	// fmt.Printf("source:\n%s\n", fixedSource)
 	// mod
 	name := strings.ReplaceAll(opts.Name, " ", "_")
+	if name == "" {
+		name = "yomo-sfn"
+	}
 	cmd := exec.Command("go", "mod", "init", name)
 	cmd.Dir = tempDir
 	env := os.Environ()

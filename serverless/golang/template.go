@@ -6,11 +6,17 @@ import (
 	"text/template"
 )
 
+// MainFuncRxTmpl the rxstream serverless of the main function template
 //go:embed templates/main_rx.tmpl
 var MainFuncRxTmpl []byte
 
+// MainFuncRawBytesTmpl the raw bytes serverless of the main function template
 //go:embed templates/main_raw_bytes.tmpl
 var MainFuncRawBytesTmpl []byte
+
+// PartialsTmpl partials template, used for rendering the partials
+//go:embed templates/partials.tmpl
+var PartialsTmpl []byte
 
 //go:embed templates/init.tmpl
 var InitFuncTmpl []byte
@@ -23,6 +29,8 @@ type Context struct {
 	ZipperAddrs []string
 	// Client credential
 	Credential string
+	// use environment variables
+	UseEnv bool
 }
 
 // RenderTmpl renders the template with the given context
