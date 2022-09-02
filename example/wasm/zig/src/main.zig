@@ -23,6 +23,7 @@ export fn yomo_handler(input_length: usize) void {
 
     // process app data
     const output = std.ascii.allocUpperString(allocator, input) catch undefined;
+    defer allocator.free(output);
 
     // dump output data
     yomo_dump_output(0x34, &output[0], output.len);
