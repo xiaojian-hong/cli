@@ -97,6 +97,9 @@ func (r *wasmEdgeRuntime) GetObserveDataTags() []byte {
 // RunHandler runs the wasm application (request -> response mode)
 func (r *wasmEdgeRuntime) RunHandler(data []byte) (byte, []byte, error) {
 	r.input = data
+	// reset output
+	r.outputTag = 0
+	r.output = nil
 
 	// Run the handler function. Given the pointer to the input data.
 	if _, err := r.vm.Execute(WasmFuncHandler, int32(len(data))); err != nil {

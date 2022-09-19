@@ -89,7 +89,11 @@ func (r *wasmtimeRuntime) GetObserveDataTags() []byte {
 // RunHandler runs the wasm application (request -> response mode)
 func (r *wasmtimeRuntime) RunHandler(data []byte) (byte, []byte, error) {
 	r.input = data
+	// reset output
+	r.outputTag = 0
+	r.output = nil
 
+	// run handler
 	if _, err := r.handler.Call(r.store, len(data)); err != nil {
 		return 0, nil, fmt.Errorf("handler.Call: %v", err)
 	}
