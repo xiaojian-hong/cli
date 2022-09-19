@@ -117,25 +117,27 @@ func (r *wasmEdgeRuntime) Close() error {
 	return nil
 }
 
-func (r *wasmEdgeRuntime) observeDataTag(_ any, _ *wasmedge.Memory, params []any) ([]any, wasmedge.Result) {
+func (r *wasmEdgeRuntime) observeDataTag(_ any, _ *wasmedge.CallingFrame, params []any) ([]any, wasmedge.Result) {
 	tag := params[0].(int32)
 	r.observed = append(r.observed, byte(tag))
 	return nil, wasmedge.Result_Success
 }
 
-func (r *wasmEdgeRuntime) loadInput(_ any, mem *wasmedge.Memory, params []any) ([]any, wasmedge.Result) {
+func (r *wasmEdgeRuntime) loadInput(_ any, callframe *wasmedge.CallingFrame, params []any) ([]any, wasmedge.Result) {
 	pointer := params[0].(int32)
+	mem := callframe.GetMemoryByIndex(0)
 	if err := mem.SetData(r.input, uint(pointer), uint(len(r.input))); err != nil {
 		return nil, wasmedge.Result_Fail
 	}
 	return nil, wasmedge.Result_Success
 }
 
-func (r *wasmEdgeRuntime) dumpOutput(_ any, mem *wasmedge.Memory, params []any) ([]any, wasmedge.Result) {
+func (r *wasmEdgeRuntime) dumpOutput(_ any, callframe *wasmedge.CallingFrame, params []any) ([]any, wasmedge.Result) {
 	tag := params[0].(int32)
 	pointer := params[1].(int32)
 	length := params[2].(int32)
 	r.outputTag = byte(tag)
+	mem := callframe.GetMemoryByIndex(0)
 	output, err := mem.GetData(uint(pointer), uint(length))
 	if err != nil {
 		return nil, wasmedge.Result_Fail

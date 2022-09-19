@@ -42,6 +42,7 @@ serverless function runtime.
    - [Rust](rust/README.md)
    - [Go](go/README.md)
    - [C](c/README.md)
+   - [Zig](zig/README.md)
 
    We will continue adding more examples for other languages (Python, C#,
    Kotlin, etc.).
@@ -63,7 +64,7 @@ serverless function runtime.
 - Start wasm serverless function
 
   ```sh
-  YOMO_SFN_NAME=wasm-upper yomo run sfn.wasm
+  yomo run sfn.wasm
   ```
 
   you can choose the wasm runtime via the `--runtime` parameter (`wasmtime` |
@@ -72,6 +73,8 @@ serverless function runtime.
 - Start Source & Sink
 
   ```sh
+  cd ../source-hello
+
   go run main.go
   ```
 
