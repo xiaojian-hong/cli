@@ -32,6 +32,8 @@ example/mesh/stream-fn-db/stream-fn-db
 Cargo.lock
 target
 VERSION
+*.sock
+*.bundle.js
 
 # release directory
 release/

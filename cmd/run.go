@@ -23,9 +23,11 @@ import (
 	"github.com/yomorun/cli/pkg/file"
 	"github.com/yomorun/cli/pkg/log"
 	"github.com/yomorun/cli/serverless"
+
+	// serverless registrations
+	_ "github.com/yomorun/cli/serverless/deno"
 	_ "github.com/yomorun/cli/serverless/exec"
 	_ "github.com/yomorun/cli/serverless/golang"
-	_ "github.com/yomorun/cli/serverless/js"
 	_ "github.com/yomorun/cli/serverless/wasm"
 )
 
