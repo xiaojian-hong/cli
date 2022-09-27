@@ -1,34 +1,34 @@
 # https://taskfile.dev
 
-version: '3'
+version: "3"
 
 output: prefixed
 
 vars:
   Name: yomo
   ExeName: yomo{{exeExt}}
-  ExeDir: yomo 
-  ReleaseDir: release 
-  Version: 
+  ExeDir: yomo
+  ReleaseDir: release
+  Version:
     sh: git describe --always --tags --dirty
   Date:
     sh: git show -s --format=%cs {{.Commit}}
   Commit:
     sh: git rev-parse --short HEAD
   Module:
-    sh: go list 
+    sh: go list
 
 tasks:
   default:
     cmds:
-      - task -l 
+      - task -l
     silent: true
 
   build:
     desc: build yomo cli tools
     cmds:
       - echo "{{.Name}} building..."
-      - go build -v -o {{.ExeDir}}/{{.ExeName}} -ldflags "-s -w -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" {{.ExeDir}}/main.go
+      - go build -v -tags "{{.TAGS}}" -o {{.ExeDir}}/{{.ExeName}} -ldflags "-s -w -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" {{.ExeDir}}/main.go
       - echo "{{.Name}} built."
     generates:
       - "{{.ExeDir}}/{{.ExeName}}"
@@ -43,7 +43,7 @@ tasks:
     dir: yomo
     cmds:
       - echo "{{.Name}} install..."
-      - go install -ldflags "-s -w -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}" 
+      - go install -ldflags "-s -w -X {{.Module}}/cmd.Version={{.Version}} -X {{.Module}}/cmd.Date={{.Date}}"
       - echo "{{.Name}} {{.Version}}({{.Date}}) is installed."
     silent: true
 
@@ -59,7 +59,7 @@ tasks:
     silent: true
 
   run:
-    desc: run yomo cli 
+    desc: run yomo cli
     deps: [build]
     cmds:
       - "{{.ExeDir}}/{{.ExeName}}"
@@ -67,7 +67,14 @@ tasks:
 
   example:
     desc: example
-    deps: [example-zipper,example-zipper2,example-source,example-stream-fn,example-stream-fn-db]
+    deps:
+      [
+        example-zipper,
+        example-zipper2,
+        example-source,
+        example-stream-fn,
+        example-stream-fn-db,
+      ]
     cmds:
       - echo "example"
 
@@ -151,13 +158,13 @@ tasks:
 
   version:
     desc: "print version"
-    cmds: 
+    cmds:
       - echo "Version {{.Version}}({{.Date}})"
     silent: true
 
   clean:
     desc: "cli clean"
-    cmds: 
+    cmds:
       - echo 'cli cleaning...'
       - rm -rf example/source/source{{exeExt}}
       - rm -rf example/stream-fn/stream-fn*
@@ -176,13 +183,27 @@ tasks:
 
   example-mesh-us:
     desc: example-mesh-us
-    deps: [example-mesh-zipper-sender-us,example-mesh-zipper-receiver-us,example-mesh-stream-fn-us,example-mesh-stream-fn-db-us,example-mesh-source-us]
+    deps:
+      [
+        example-mesh-zipper-sender-us,
+        example-mesh-zipper-receiver-us,
+        example-mesh-stream-fn-us,
+        example-mesh-stream-fn-db-us,
+        example-mesh-source-us,
+      ]
     cmds:
       - echo "example-mesh-us"
 
   example-mesh-eu:
     desc: example-mesh-eu
-    deps: [example-mesh-zipper-sender-eu,example-mesh-zipper-receiver-eu,example-mesh-stream-fn-eu,example-mesh-stream-fn-db-eu,example-mesh-source-eu]
+    deps:
+      [
+        example-mesh-zipper-sender-eu,
+        example-mesh-zipper-receiver-eu,
+        example-mesh-stream-fn-eu,
+        example-mesh-stream-fn-db-eu,
+        example-mesh-source-eu,
+      ]
     cmds:
       - echo "example-mesh-eu"
 
