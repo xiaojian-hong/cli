@@ -140,22 +140,6 @@ tasks:
       - "../../{{.ExeDir}}/{{.ExeName}} run app.go"
     silent: false
 
-  example-js-stream-fn:
-    desc: "run js-stream-fn application"
-    deps: [build]
-    dir: "example/js/stream-fn"
-    cmds:
-      - "../../../{{.ExeDir}}/{{.ExeName}} run app.js"
-    silent: false
-
-  example-js-stream-fn-db:
-    desc: run output stream-fn-db
-    deps: [build]
-    dir: "example/js/stream-fn-db"
-    cmds:
-      - "../../../{{.ExeDir}}/{{.ExeName}} run app.js"
-    silent: false
-
   version:
     desc: "print version"
     cmds:
@@ -176,8 +160,6 @@ tasks:
       - rm -rf example/mesh/stream-fn-db/stream-fn-db{{exeExt}}
       - rm -rf cmd/yomo/yomo{{exeExt}}
       - rm -rf release
-      - rm -rf example/js/stream-fn/sl.*
-      - rm -rf example/js/stream-fn-db/sl.*
       - echo 'cli clean.'
     silent: true
 
