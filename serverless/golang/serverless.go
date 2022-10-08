@@ -51,14 +51,17 @@ func (s *GolangServerless) Init(opts *serverless.Options) error {
 		Name:        s.opts.Name,
 		ZipperAddrs: s.opts.ZipperAddrs,
 		Credential:  s.opts.Credential,
+		UseEnv:      s.opts.UseEnv,
 	}
 
 	// determine: rx stream serverless or raw bytes serverless.
 	isRx := strings.Contains(string(source), "rx.Stream")
 	mainFuncTmpl := ""
 	if isRx {
+		MainFuncRxTmpl = append(MainFuncRxTmpl, PartialsTmpl...)
 		mainFuncTmpl = string(MainFuncRxTmpl)
 	} else {
+		MainFuncRawBytesTmpl = append(MainFuncRawBytesTmpl, PartialsTmpl...)
 		mainFuncTmpl = string(MainFuncRawBytesTmpl)
 	}
 
@@ -103,6 +106,9 @@ func (s *GolangServerless) Init(opts *serverless.Options) error {
 	// log.InfoStatusEvent(os.Stdout, "final write file elapse: %v", time.Since(now))
 	// mod
 	name := strings.ReplaceAll(opts.Name, " ", "_")
+	if name == "" {
+		name = "yomo-sfn"
+	}
 	cmd := exec.Command("go", "mod", "init", name)
 	cmd.Dir = tempDir
 	env := os.Environ()

@@ -28,9 +28,17 @@ example/mesh/sink/sink
 example/mesh/stream-fn/stream-fn*
 example/mesh/stream-fn-db/sl.yomo
 example/mesh/stream-fn-db/stream-fn-db
+*.wasm
+Cargo.lock
+target
 VERSION
+*.sock
+*.bundle.js
 
 # release directory
 release/
 bin/
 .vscode
+# zig cache
+example/wasm/zig/src/zig-cache
+example/wasm/zig/zig-cache
