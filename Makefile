@@ -42,6 +42,7 @@ archive-release-linux-amd64:
 	rm -rf bin/yomo
 	GOARCH=amd64 GOOS=linux $(GO) build -o bin/yomo -ldflags "-s -w ${GO_LDFLAGS}" ./yomo/main.go
 	tar -C ./bin -czf bin/yomo-${VER}-x86_64-Linux.tar.gz yomo
+	make bina
 
 archive-release-linux-arm64:
 	rm -rf bin/yomo
@@ -59,8 +60,7 @@ archive-release-darwin-arm64:
 	tar -C ./bin -czf bin/yomo-${VER}-arm64-Darwin.tar.gz yomo
 
 archive-release-windows-amd64:
-	rm -rf bin/yomo
-	GOARCH=amd64 GOOS=windows $(GO) build -o bin/yomo.exe -ldflags "-s -w ${GO_LDFLAGS}" ./yomo/main.go
+	$(GO) build -o bin/yomo.exe -ldflags "-s -w ${GO_LDFLAGS}" ./yomo/main.go
 	tar -C ./bin -czf bin/yomo-${VER}-x86_64-Windows.tar.gz yomo.exe
 
 build-w-sym:
