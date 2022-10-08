@@ -26,45 +26,41 @@ jobs:
       - name: Run go mod tidy
         run: go mod tidy
       - name: build & archive binaries
-        run: |
-          curl https://wasmtime.dev/install.sh -sSf | bash
-          make archive-release-linux
+        run: make archive-release-linux-amd64
       - name: upload artifacts
         uses: actions/upload-artifact@master
         with:
           name: yomo-artifact
           path: ./bin/**/*
-  # build-linux-arm64:
-  #   name: Build Linux arm64 binaries
-  #   runs-on: ubuntu-20.04
-  #   env:
-  #     GOVER: 1.19
-  #   steps:
-  #     - name: Set up Go ${{ env.GOVER }}
-  #       uses: actions/setup-go@v2
-  #       with:
-  #         go-version: ${{ env.GOVER }}
-  #     - name: Check out code
-  #       uses: actions/checkout@v2
-  #     - uses: uraimo/run-on-arch-action@v2
-  #       name: Run commands
-  #       id: runcmd
-  #       with:
-  #         arch: aarch64
-  #         distro: ubuntu20.04
-  #         # Set an output parameter `uname` for use in subsequent steps
-  #         run: |
-  #           uname -a
-  #           echo ::set-output name=uname::$(uname -a)
-  #     - name: Run go mod tidy
-  #       run: go mod tidy
-  #     - name: build & archive binaries
-  #       run: make archive-release-linux-arm64
-  #     - name: upload artifacts
-  #       uses: actions/upload-artifact@master
-  #       with:
-  #         name: yomo-artifact
-  #         path: ./bin/**/*
+  build-linux-arm64:
+    name: Build Linux arm64 binaries
+    runs-on: ubuntu-20.04
+    env:
+      GOVER: 1.19
+    steps:
+      - name: Set up Go ${{ env.GOVER }}
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.GOVER }}
+      - name: Check out code
+        uses: actions/checkout@v2
+      - uses: uraimo/run-on-arch-action@v2
+        name: Run commands
+        id: runcmd
+        with:
+          arch: aarch64
+          distro: ubuntu20.04
+          # Set an output parameter `uname` for use in subsequent steps
+          run: |
+            uname -a
+            echo ::set-output name=uname::$(uname -a)
+            go mod tidy
+            make archive-release-linux-arm64
+      - name: upload artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: yomo-artifact
+          path: ./bin/**/*
   publish:
     name: Publish binaries
     # needs: [build-linux, build-darwin, build-windows]

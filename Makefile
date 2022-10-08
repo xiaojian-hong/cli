@@ -38,14 +38,6 @@ archive-release:
 	rm -rf bin/yomo.exe
 	make bina
 
-archive-release-linux:
-	rm -rf bin/yomo
-	GOARCH=amd64 GOOS=linux $(GO) build -o bin/yomo -ldflags "-s -w ${GO_LDFLAGS}" ./yomo/main.go
-	tar -C ./bin -czf bin/yomo-${VER}-x86_64-Linux.tar.gz yomo
-	rm -rf bin/yomo
-	GOARCH=arm64 GOOS=linux $(GO) build -o bin/yomo -ldflags "-s -w ${GO_LDFLAGS}" ./yomo/main.go
-	tar -C ./bin -czf bin/yomo-${VER}-arm64-Linux.tar.gz yomo
-
 archive-release-linux-amd64:
 	rm -rf bin/yomo
 	GOARCH=amd64 GOOS=linux $(GO) build -o bin/yomo -ldflags "-s -w ${GO_LDFLAGS}" ./yomo/main.go
