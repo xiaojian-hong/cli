@@ -1,3 +1,6 @@
+//go:build wasmedge
+
+// Package wasm provides WebAssembly serverless function runtimes.
 package wasm
 
 import (

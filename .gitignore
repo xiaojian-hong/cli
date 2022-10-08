@@ -39,3 +39,6 @@ VERSION
 release/
 bin/
 .vscode
+# zig cache
+example/wasm/zig/src/zig-cache
+example/wasm/zig/zig-cache
